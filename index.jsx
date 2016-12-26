@@ -1,27 +1,34 @@
 import React from 'react';
 import reactDom from 'react-dom';
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
-import {Card, CardActions, CardTitle, CardText} from 'material-ui/Card';
+import {Card, CardTitle, CardText} from 'material-ui/Card';
 import injectTapEventPlugin from 'react-tap-event-plugin';
 import RaisedButton from 'material-ui/RaisedButton';
 import TextField from 'material-ui/TextField';
-
-
+import indexStyle from './index.css';
 
 class App extends React.Component {
   constructor(props) {
     super(props);
     injectTapEventPlugin();
+
+    this.state = {
+      expanded: false,
+    };
   }
   static propTypes = {
     children: React.PropTypes.node,
   };
 
+  handleExpandChange = (expanded) => {
+    this.setState({expanded: expanded});
+  };
+
+
   render() {
     return (
 
       <MuiThemeProvider>
-
         <div>
           <h1 style={{textAlign: 'center' }}>發票設定</h1>
           <h5>您目前的選擇</h5>
@@ -34,12 +41,15 @@ class App extends React.Component {
           </Card>
           <RaisedButton label="更改發票方式" fullWidth={true} primary={true}/>
 
-          <Card style={{padding: 20, marginTop: 20}}>
-            <CardTitle title="手機條碼" style={{textAlign: 'center'}} />
-            <CardText style={{ textAlign: 'center' }}>
+          {/*className={this.state.mobileCodeSelected ? indexStyle.selected : null}*/}
+          <Card style={{padding: 20, marginTop: 20}} expanded={this.state.expanded} onExpandChange={this.handleExpandChange} className={this.state.expanded ? indexStyle.selected : ''}>
+            <CardTitle title="手機條碼" style={{textAlign: 'center'}} actAsExpander={true} />
+            <CardText style={{ textAlign: 'center' }} actAsExpander={true} >
               將發票存入手機條碼當中
             </CardText>
-            <TextField hintText="請輸入您的手機條碼" fullWidth={true} />
+            <div>
+              {this.state.expanded ? <TextField hintText="請輸入您的手機條碼" fullWidth={true} /> : null}
+            </div>
           </Card>
 
           <Card style={{padding: 20, marginTop: 20}}>
