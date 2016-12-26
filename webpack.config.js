@@ -1,6 +1,7 @@
 var path = require('path');
 var webpack = require('webpack');
-
+var ExtractTextPlugin = require('extract-text-webpack-plugin');
+var combineLoaders = require('webpack-combine-loaders');
 
 module.exports = {
   entry: './index.jsx',
@@ -28,12 +29,25 @@ module.exports = {
         presets: ["react", "es2015", "stage-0"]
       }
 
+    }, {
+      test: /\.css$/,
+      loader: ExtractTextPlugin.extract(
+        'style-loader',
+        combineLoaders([{
+          loader: 'css-loader',
+          query: {
+            modules: true,
+            localIdentName: '[name]__[local]___[hash:base64:5]'
+          }
+        }])
+      )
     }]
 
   },
 
   plugins: [
     new webpack.HotModuleReplacementPlugin(),
+    new ExtractTextPlugin('styles.css'),
     new webpack.ProvidePlugin({
       React: 'react',
       ReactDOM:'react-dom'
