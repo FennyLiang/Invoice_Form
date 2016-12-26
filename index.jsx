@@ -13,15 +13,22 @@ class App extends React.Component {
     injectTapEventPlugin();
 
     this.state = {
-      expanded: false,
-    };
+      expanedForm1:false,
+      expanedForm2:false,
+
+  };
+
   }
   static propTypes = {
     children: React.PropTypes.node,
   };
 
-  handleExpandChange = (expanded) => {
-    this.setState({expanded: expanded});
+  handleExpandChangeForm1 = () => {
+    this.setState({expanededForm1: true})
+  };
+
+  handleExpandChangeForm2 = () => {
+    this.setState({expanedForm2: true});
   };
 
 
@@ -33,6 +40,8 @@ class App extends React.Component {
           <h1 style={{textAlign: 'center' }}>發票設定</h1>
           <h5>您目前的選擇</h5>
           <h5>請選擇您的發票方式</h5>
+
+          {/*店家載具*/}
           <Card>
             <CardTitle title="使用店家載具" style={{textAlign: 'center'}} />
             <CardText style={{textAlign: 'center' }}>
@@ -41,25 +50,27 @@ class App extends React.Component {
           </Card>
           <RaisedButton label="更改發票方式" fullWidth={true} primary={true}/>
 
-          {/*className={this.state.mobileCodeSelected ? indexStyle.selected : null}*/}
-          <Card style={{padding: 20, marginTop: 20}} expanded={this.state.expanded} onExpandChange={this.handleExpandChange} className={this.state.expanded ? indexStyle.selected : ''}>
+          {/*手機條碼*/}
+          <Card style={{padding: 20, marginTop: 20}} expanded={this.state.expanedForm1} onExpandChange={this.handleExpandChangeForm1} className={this.state.expanedForm1 ? indexStyle.selected : ''} >
             <CardTitle title="手機條碼" style={{textAlign: 'center'}} actAsExpander={true} />
             <CardText style={{ textAlign: 'center' }} actAsExpander={true} >
               將發票存入手機條碼當中
             </CardText>
             <div>
-              {this.state.expanded ? <TextField hintText="請輸入您的手機條碼" fullWidth={true} /> : null}
+              {this.state.expanedForm1 ? <TextField hintText="請輸入您的手機條碼" fullWidth={true} /> : null}
             </div>
           </Card>
 
-          <Card style={{padding: 20, marginTop: 20}}>
-            <CardTitle title="捐贈" style={{textAlign: 'center'}} />
-            <CardText style={{ textAlign: 'center' }}>
+          {/*捐贈*/}
+          <Card style={{padding: 20, marginTop: 20}} expanded={this.state.expanedForm2} onExpandChange={this.handleExpandChangeForm2} className={this.state.expanedForm2 ? indexStyle.selected : ''} >
+            <CardTitle title="捐贈" style={{textAlign: 'center'}} actAsExpander={true} />
+            <CardText style={{ textAlign: 'center' }} actAsExpander={true} >
               將發票捐贈
             </CardText>
-            <TextField hintText="請輸入您的愛心碼(預設為陽光基金會)" fullWidth={true} />
+            {this.state.expanedForm2 ? <TextField hintText="請輸入您的愛心碼(預設為陽光基金會)" fullWidth={true} /> : null}
           </Card>
 
+          {/*其他*/}
           <Card style={{padding: 20, marginTop: 20}}>
             <CardTitle title="其他" style={{textAlign: 'center'}} />
             <CardText style={{ textAlign: 'center' }}>
