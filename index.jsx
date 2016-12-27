@@ -19,7 +19,8 @@ class App extends React.Component {
       clickState: false,
       clickFirst: false
   };
-    // this.handleChangeForm3 = this.handleChangeForm3.bind(this);
+
+
   }
   static propTypes = {
     children: React.PropTypes.node,
@@ -50,11 +51,6 @@ class App extends React.Component {
 
 
   render() {
-    const style = {
-      backgroundColor: '#B2DFDB',
-      width: 632,
-      marginRight: 0
-    };
     return (
 
       <MuiThemeProvider>
@@ -98,7 +94,7 @@ class App extends React.Component {
             </CardText>
           </Card>
           <div style={{padding: 0}}>
-            <RaisedButton label="Action1" style={style} />
+            <RaisedButton label="Action1" style={{width: 632, marginRight: 0}} backgroundColor={'#B2DFDB'} />
             <RaisedButton label="Action2" style={{width: 632, marginRight: 0}}/>
           </div>
 
