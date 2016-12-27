@@ -87,17 +87,17 @@ class App extends React.Component {
           </Card>
 
           {/*其他*/}
-          <Card style={{padding: 20, marginTop: 20, display: this.state.isActive ? 'none' : '', border: this.state.clickState ? '#B0BEC5 solid 2px' : '' }} onClick={this.handleChangeForm3} >
+          <Card style={{padding: 20, marginTop: 20, marginBottom: 100, display: this.state.isActive ? 'none' : '', border: this.state.clickState ? '#B0BEC5 solid 2px' : '' }} onClick={this.handleChangeForm3} >
             <CardTitle title="其他" style={{textAlign: 'center'}} />
             <CardText style={{ textAlign: 'center' }}>
               索取發票或是將發票存入自然人憑證
             </CardText>
           </Card>
-          {/*<div style={{position: 'fixed', bottom: 0, width: '100%', marginLeft: 0, height: 40}} >*/}
-            <RaisedButton label="取消" style={{width: '50%', position: 'fixed'}} backgroundColor={'#B2DFDB'} labelColor={'#FFFFFF'}  />
-            <RaisedButton label="確認" style={{width: '50%', position: 'fixed'}} backgroundColor={'#81D4FA'} labelColor={'#FFFFFF'} />
-          {/*</div>*/}
-
+          <div style={{position: 'fixed', bottom: 0, left: 0, width: '100%', display: this.state.isActive ? 'none' : '' }} >
+            <RaisedButton label="取消" className={indexStyle.RaisedButton_noRadius} style={{width: '50%'}} backgroundColor={'#B2DFDB'} labelColor={'#FFFFFF'} />
+            <RaisedButton label="確認" className={indexStyle.RaisedButton_noRadius} style={{width: '50%', display: this.state.clickState ? 'none':''}} backgroundColor={'#81D4FA'} labelColor={'#FFFFFF'} />
+            <RaisedButton label="確認" className={indexStyle.RaisedButton_noRadius} disabled={true} style={{width: '50%', display: this.state.clickState ? '':'none'}} labelColor={'#FFFFFF'} />
+          </div>
         </div>
 
       </MuiThemeProvider>

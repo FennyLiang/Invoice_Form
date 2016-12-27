@@ -6,3 +6,10 @@
     border: #B0BEC5 solid 3px;
 }
 
+html {
+    height: 100%;
+}
+
+.RaisedButton_noRadius, .RaisedButton_noRadius div, .RaisedButton_noRadius button {
+    border-radius: 0 !important;
+}
