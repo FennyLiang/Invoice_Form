@@ -93,10 +93,10 @@ class App extends React.Component {
               索取發票或是將發票存入自然人憑證
             </CardText>
           </Card>
-          <div style={{padding: 0}}>
-            <RaisedButton label="Action1" style={{width: 632, marginRight: 0}} backgroundColor={'#B2DFDB'} />
-            <RaisedButton label="Action2" style={{width: 632, marginRight: 0}}/>
-          </div>
+          {/*<div style={{position: 'fixed', bottom: 0, width: '100%', marginLeft: 0, height: 40}} >*/}
+            <RaisedButton label="取消" style={{width: '50%', position: 'fixed'}} backgroundColor={'#B2DFDB'} labelColor={'#FFFFFF'}  />
+            <RaisedButton label="確認" style={{width: '50%', position: 'fixed'}} backgroundColor={'#81D4FA'} labelColor={'#FFFFFF'} />
+          {/*</div>*/}
 
         </div>
 
