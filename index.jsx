@@ -1,7 +1,7 @@
 import React from 'react';
 import reactDom from 'react-dom';
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
-import {Card, CardActions,CardTitle, CardText} from 'material-ui/Card';
+import {Card, CardTitle, CardText} from 'material-ui/Card';
 import injectTapEventPlugin from 'react-tap-event-plugin';
 import RaisedButton from 'material-ui/RaisedButton';
 import TextField from 'material-ui/TextField';
@@ -49,6 +49,10 @@ class App extends React.Component {
     this.setState({isActive: false});
   };
 
+  style =  {
+    padding: 20,
+    marginTop: 20 ,
+  }
 
   render() {
     return (
@@ -60,8 +64,8 @@ class App extends React.Component {
           <h5 onClick={this.button_click} style={{display: this.state.isActive ? 'none' : '' }}>請選擇您的發票方式</h5>
 
           {/*店家載具*/}
-          <Card style={{padding: 20, marginTop: 20, border: this.state.clickFirst ? '#B2DFDB solid 2px' : '' }} onClick={this.handleChangeForm0} >
-            <CardTitle title="使用店家載具" style={{textAlign: 'center'}} />
+          <Card style={{...this.style, border: this.state.clickFirst ? '#B2DFDB solid 2px' : '' }} onClick={this.handleChangeForm0} >
+            <CardTitle title="使用店家載具" style={{textAlign: 'center' }} />
             <CardText style={{ textAlign: 'center' }} >
               發票由WeMo代為保管，中獎會主動寄出給您
             </CardText>
@@ -69,7 +73,7 @@ class App extends React.Component {
           <RaisedButton label="更改發票方式" fullWidth={true} primary={true} onClick={this.button_click} style={{display: this.state.isActive ? '' : 'none' }}/>
 
           {/*手機條碼*/}
-          <Card style={{padding: 20, marginTop: 20, display: this.state.isActive ? 'none' : '', border: this.state.expanedForm1 ? '#B2DFDB solid 2px' : '' }} expanded={this.state.expanedForm1} onExpandChange={this.handleExpandChangeForm1} >
+          <Card style={{...this.style, display: this.state.isActive ? 'none' : '', border: this.state.expanedForm1 ? '#B2DFDB solid 2px' : '' }} expanded={this.state.expanedForm1} onExpandChange={this.handleExpandChangeForm1} >
             <CardTitle title="手機條碼" style={{textAlign: 'center'}} actAsExpander={true} />
             <CardText style={{ textAlign: 'center' }} actAsExpander={true} >
               將發票存入手機條碼當中
@@ -78,7 +82,7 @@ class App extends React.Component {
           </Card>
 
           {/*捐贈*/}
-          <Card style={{padding: 20, marginTop: 20, display: this.state.isActive ? 'none' : '', border: this.state.expanedForm2 ? '#B2DFDB solid 2px' : '' }} expanded={this.state.expanedForm2} onExpandChange={this.handleExpandChangeForm2} >
+          <Card style={{...this.style, display: this.state.isActive ? 'none' : '', border: this.state.expanedForm2 ? '#B2DFDB solid 2px' : '' }} expanded={this.state.expanedForm2} onExpandChange={this.handleExpandChangeForm2} >
             <CardTitle title="捐贈" style={{textAlign: 'center'}} actAsExpander={true} />
             <CardText style={{ textAlign: 'center' }} actAsExpander={true} >
               將發票捐贈
@@ -87,7 +91,7 @@ class App extends React.Component {
           </Card>
 
           {/*其他*/}
-          <Card style={{padding: 20, marginTop: 20, marginBottom: 100, display: this.state.isActive ? 'none' : '', border: this.state.clickState ? '#B0BEC5 solid 2px' : '' }} onClick={this.handleChangeForm3} >
+          <Card style={{...this.style, marginBottom: 100, display: this.state.isActive ? 'none' : '', border: this.state.clickState ? '#B0BEC5 solid 2px' : '' }} onClick={this.handleChangeForm3} >
             <CardTitle title="其他" style={{textAlign: 'center'}} />
             <CardText style={{ textAlign: 'center' }}>
               索取發票或是將發票存入自然人憑證
