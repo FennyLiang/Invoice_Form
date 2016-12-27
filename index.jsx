@@ -95,8 +95,8 @@ class App extends React.Component {
           </Card>
           <div style={{position: 'fixed', bottom: 0, left: 0, width: '100%', display: this.state.isActive ? 'none' : '' }} >
             <RaisedButton label="取消" className={indexStyle.RaisedButton_noRadius} style={{width: '50%'}} backgroundColor={'#B2DFDB'} labelColor={'#FFFFFF'} />
-            <RaisedButton label="確認" className={indexStyle.RaisedButton_noRadius} style={{width: '50%', display: this.state.clickState ? 'none':''}} backgroundColor={'#81D4FA'} labelColor={'#FFFFFF'} />
-            <RaisedButton label="確認" className={indexStyle.RaisedButton_noRadius} disabled={true} style={{width: '50%', display: this.state.clickState ? '':'none'}} labelColor={'#FFFFFF'} />
+            <RaisedButton label="確認" className={indexStyle.RaisedButton_noRadius} style={{width: '50%', display: this.state.clickState ? 'none':'inline-block'}} backgroundColor={'#81D4FA'} labelColor={'#FFFFFF'} />
+            <RaisedButton label="請洽客服" className={indexStyle.RaisedButton_noRadius} disabled={true} style={{width: '50%', display: this.state.clickState ? 'inline-block':'none' }} labelColor={'#FFFFFF'} />
           </div>
         </div>
 
