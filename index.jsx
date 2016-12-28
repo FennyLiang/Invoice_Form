@@ -78,7 +78,7 @@ class App extends React.Component {
             <CardText style={{ textAlign: 'center' }} actAsExpander={true} >
               將發票存入手機條碼當中
             </CardText>
-              {this.state.expanedForm1 ? <TextField hintText="請輸入您的手機條碼" fullWidth={true} /> : null}
+              <TextField className={indexStyle.strechHeightAnimation} style={this.state.expanedForm1 ? { opacity: 1 } : { height: 0, opacity: 0 }} hintText="請輸入您的手機條碼" fullWidth={true} />
           </Card>
 
           {/*捐贈*/}
@@ -87,7 +87,7 @@ class App extends React.Component {
             <CardText style={{ textAlign: 'center' }} actAsExpander={true} >
               將發票捐贈
             </CardText>
-              {this.state.expanedForm2 ? <TextField hintText="請輸入您的愛心碼(預設為陽光基金會)" fullWidth={true} /> : null}
+              <TextField className={indexStyle.strechHeightAnimation} style={this.state.expanedForm2 ? { opacity: 1 } : { height: 0, opacity: 0 }} hintText="請輸入您的愛心碼(預設為陽光基金會)" fullWidth={true} />
           </Card>
 
           {/*其他*/}
