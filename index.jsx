@@ -73,17 +73,17 @@ class App extends React.Component {
   };
 
   render() {
-    if(this.state.position === true){
-      return(
-        <div>
-        <Spinner spinnerName="three-bounce" style={{textAlign: 'center', marginTop: 50}}/>
-        </div>
-      )
-    } else {
+    // if(this.state.position === true){
+    //   return(
+    //     <div>
+    //     <Spinner spinnerName="three-bounce" style={{textAlign: 'center', marginTop: 50}}/>
+    //     </div>
+    //   )
+    // } else {
         return (
           <MuiThemeProvider>
 
-            <div style={ this.state.position? '' : {...this.fadeinStyle} } className={indexStyle.fadeIn} >
+            <div style={ {...this.fadeinStyle} } className={indexStyle.fadeIn} >
 
               <h2 style={{textAlign: 'center' }}>發票設定</h2>
               <h5 onClick={this.button_click} style={{display: this.state.isActive ? '' : 'none' }}>您目前的選擇</h5>
@@ -133,6 +133,6 @@ class App extends React.Component {
         )
       }
     }
-  }
+  // }
 
 reactDom.render(<App />, document.getElementById('app'));
