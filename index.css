@@ -21,3 +21,13 @@ div {
 .strechHeightAnimation {
     transition: 0.4s height, 0.25s opacity !important;
 }
+
+.progressSpin {
+    transform:translateY(-50%);
+    positions: 0 auto;
+}
+
+.positionCenter {
+    height: 100%;
+    width: 100%;
+}
