@@ -1,7 +1,7 @@
 .three-bounce > div {
     width: 30px;
     height: 30px;
-    background-color: #F8BBD0;
+    background-color: #00BCD4;
     border-radius: 100%;
     display: inline-block;
     -webkit-animation: bouncedelay 1.4s infinite ease-in-out;

@@ -17,6 +17,7 @@
     "object-assign": "^4.1.0",
     "react": "^15.4.1",
     "react-dom": "^15.4.1",
+    "react-fade": "^1.1.1",
     "react-redux": "^5.0.1",
     "react-spinkit": "^1.1.11",
     "react-tap-event-plugin": "^2.0.1",
