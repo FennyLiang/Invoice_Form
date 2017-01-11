@@ -11,15 +11,19 @@ html {
 }
 
 div {
-    transition: border 0s !important;
+    transition: border 0s ;
 }
 
 .RaisedButton_noRadius, .RaisedButton_noRadius div, .RaisedButton_noRadius button {
     border-radius: 0 !important;
 }
 
+
 .strechHeightAnimation {
-    transition: 0.4s height, 0.25s opacity !important;
+    -o-transition: 0.8s height, 0.25s opacity;
+    -moz-transition: 0.8s height, 0.25s opacity;
+    -webkit-transition: 0.8s height, 0.3s opacity;
+    transition: 1s height, 0.3s opacity;
 }
 
 .progressSpin {

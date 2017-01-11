@@ -53,13 +53,13 @@ class App extends React.Component {
     this.setState({isActive: false});
   };
 
-  getInitialState() {
-    return {position: true};
-  };
-
-  componentDidMount() {
-    setTimeout(function() { this.setState({position: false}); }.bind(this), 1000)
-  };
+  // getInitialState() {
+  //   return {position: true};
+  // };
+  //
+  // componentDidMount() {
+  //   setTimeout(function() { this.setState({position: false}); }.bind(this), 1000)
+  // };
 
 
   style =  {
@@ -117,12 +117,17 @@ class App extends React.Component {
               </Card>
 
               {/*其他*/}
-              <Card style={{...this.style, marginBottom: 100, display: this.state.isActive ? 'none' : '', border: this.state.clickState ? '#B0BEC5 solid 2px' : '' }} onClick={this.handleChangeForm3} >
-                <CardTitle title="其他" style={{textAlign: 'center'}} />
+              <Card style={{...this.style, marginBottom: 30, display: this.state.isActive ? 'none' : '', border: this.state.clickState ? '#B0BEC5 solid 2px' : '' }} onClick={this.handleChangeForm3} >
+                <CardTitle title="自然人憑證" style={{textAlign: 'center'}} />
                 <CardText style={{ textAlign: 'center' }}>
-                  索取發票或是將發票存入自然人憑證
+                  將發票存入自然人憑證
                 </CardText>
               </Card>
+              <div style={{position: 'relative', marginBottom: 10, padding: 0, display: this.state.isActive ? 'none' : ''}}>
+                <h4 style={{color:'#757575', lineHeight: 1.5, textAlign:'left', fontSize: 15.5}}>為了響應環保，未得獎者本公司不提供紙本發票索取喔。請大家跟我們一起愛護這個地球 >_^ </h4>
+              </div>
+              <div style={{...this.style}}></div>
+
               <div style={{position: 'fixed', bottom: 0, left: 0, width: '100%', display: this.state.isActive ? 'none' : '' }} >
                 <RaisedButton label="取消" className={indexStyle.RaisedButton_noRadius} style={{width: '50%'}} backgroundColor={'#B2DFDB'} labelColor={'#FFFFFF'} />
                 <RaisedButton label="確認" className={indexStyle.RaisedButton_noRadius} style={{width: '50%', display: this.state.clickState ? 'none':'inline-block'}} backgroundColor={'#81D4FA'} labelColor={'#FFFFFF'} />
