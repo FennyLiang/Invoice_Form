@@ -91,17 +91,18 @@ class App extends React.Component {
 
               {/*店家載具*/}
               <Card style={{...this.style, border: this.state.clickFirst ? '#B2DFDB solid 2px' : ''}} className={indexStyle.RaisedButton_noRadius} onClick={this.handleChangeForm0}>
-                <CardTitle title="使用店家載具" style={{textAlign: 'center' }} />
-                <CardText style={{ textAlign: 'center' }} >
-                  發票由WeMo代為保管，中獎會主動寄出給您
+                <CardTitle title="使用店家載具" style={{textAlign: 'center' }} titleColor="#9E9E9E"/>
+                <CardText style={{ textAlign: 'center'}} color={'#9E9E9E'} >
+                  WeMo將使用您的EMAIL做為店家載具<br/>
+                  中獎會主動寄出紙本發票給您
                 </CardText>
               </Card>
               <RaisedButton label="更改發票方式" fullWidth={true} primary={true} onClick={this.button_click} style={{display: this.state.isActive ? '' : 'none' }}/>
 
               {/*手機條碼*/}
               <Card style={{...this.style, display: this.state.isActive ? 'none' : '', border: this.state.expanedForm1 ? '#B2DFDB solid 2px' : '' }} expanded={this.state.expanedForm1} onExpandChange={this.handleExpandChangeForm1} >
-                <CardTitle title="手機條碼" style={{textAlign: 'center'}} actAsExpander={true} />
-                <CardText style={{ textAlign: 'center' }} actAsExpander={true} >
+                <CardTitle title="手機條碼" style={{textAlign: 'center'}} actAsExpander={true} titleColor="#9E9E9E" />
+                <CardText style={{ textAlign: 'center' }} actAsExpander={true} color={'#9E9E9E'} >
                   將發票存入手機條碼當中
                 </CardText>
                 <TextField className={indexStyle.strechHeightAnimation} style={this.state.expanedForm1 ? { opacity: 1 } : { height: 0, opacity: 0 }} hintText="請輸入您的手機條碼" fullWidth={true} />
@@ -109,22 +110,25 @@ class App extends React.Component {
 
               {/*捐贈*/}
               <Card style={{...this.style, display: this.state.isActive ? 'none' : '', border: this.state.expanedForm2 ? '#B2DFDB solid 2px' : '' }} expanded={this.state.expanedForm2} onExpandChange={this.handleExpandChangeForm2} >
-                <CardTitle title="捐贈" style={{textAlign: 'center'}} actAsExpander={true} />
-                <CardText style={{ textAlign: 'center' }} actAsExpander={true} >
+                <CardTitle title="捐贈" style={{textAlign: 'center'}} actAsExpander={true} titleColor="#9E9E9E" />
+                <CardText style={{ textAlign: 'center' }} actAsExpander={true} color={'#9E9E9E'} >
                   將發票捐贈
                 </CardText>
                 <TextField className={indexStyle.strechHeightAnimation} style={this.state.expanedForm2 ? { opacity: 1 } : { height: 0, opacity: 0 }} hintText="請輸入您的愛心碼(預設為陽光基金會)" fullWidth={true} />
               </Card>
 
               {/*其他*/}
-              <Card style={{...this.style, marginBottom: 30, display: this.state.isActive ? 'none' : '', border: this.state.clickState ? '#B0BEC5 solid 2px' : '' }} onClick={this.handleChangeForm3} >
-                <CardTitle title="自然人憑證" style={{textAlign: 'center'}} />
-                <CardText style={{ textAlign: 'center' }}>
+              <Card style={{...this.style, marginBottom: 30, display: this.state.isActive ? 'none' : '', border: this.state.clickState ? '#B0BEC5 solid 2px' : '' }} expanded={this.state.clickState} onExpandChange={this.handleChangeForm3} >
+                <CardTitle title="自然人憑證" style={{textAlign: 'center'}} actAsExpander={true} titleColor="#9E9E9E" />
+                <CardText style={{ textAlign: 'center' }} actAsExpander={true} color={'#9E9E9E'} >
                   將發票存入自然人憑證
                 </CardText>
+                <TextField className={indexStyle.strechHeightAnimation} style={this.state.clickState ? { opacity: 1 } : { height: 0, opacity: 0 }} hintText="請輸入您的自然人憑證" fullWidth={true} />
               </Card>
+
+
               <div style={{position: 'relative', marginBottom: 10, padding: 0, display: this.state.isActive ? 'none' : ''}}>
-                <h4 style={{color:'#757575', lineHeight: 1.5, textAlign:'left', fontSize: 15.5}}>為了響應環保，未得獎者本公司不提供紙本發票索取喔。請大家跟我們一起愛護這個地球 >_^ </h4>
+                <h4 style={{color:'#9E9E9E', lineHeight: 1.5, textAlign:'left', fontSize: 15.5}}>為了響應環保，未得獎者本公司不提供紙本發票索取喔。請大家跟我們一起愛護這個地球 >_^ </h4>
               </div>
               <div style={{...this.style}}></div>
 
