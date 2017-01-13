@@ -53,6 +53,43 @@ class App extends React.Component {
     this.setState({isActive: false});
   };
 
+  // fetch briareus api
+
+  getParameterByName =(name, url) => {
+    if (!url) {
+      url = window.location.href;
+    }
+    name = name.replace(/[\[\]]/g, "\\$&");
+    var regex = new RegExp("[?&]" + name + "(=([^&#]*)|&|#|$)"),
+      results = regex.exec(url);
+    if (!results) return null;
+    if (!results[2]) return '';
+    var decoUrl = decodeURIComponent(results[2].replace(/\+/g, " "));
+    return decoUrl;
+  };
+
+  async submitForm(decoUrl) {
+    var resultToken = this.getParameterByName('token', decoUrl);
+    console.log(resultToken);
+    const resp = await fetch('', {
+      method: 'POST',
+      headers: {
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+      },
+      mode: 'cors',
+      // credentials: 'include',
+      body: JSON.stringify({
+        token: resultToken,
+      }),
+    });
+
+    const { result, data } = await resp.json();
+    // console.log(data[0].promotionType)
+
+    this.setState({ userPromotions: data});
+  };
+
   // getInitialState() {
   //   return {position: true};
   // };
@@ -86,11 +123,11 @@ class App extends React.Component {
             <div style={ {...this.fadeinStyle} } className={indexStyle.fadeIn} >
 
               <h2 style={{textAlign: 'center' }}>發票設定</h2>
-              <h5 onClick={this.button_click} style={{display: this.state.isActive ? '' : 'none' }}>您目前的選擇</h5>
-              <h5 onClick={this.button_click} style={{display: this.state.isActive ? 'none' : '' }}>請選擇您的發票方式</h5>
+              <h5 style={{display: this.state.isActive ? '' : 'none' }}>您目前的選擇</h5>
+              <h5 style={{display: this.state.isActive ? 'none' : '' }}>請選擇您的發票方式</h5>
 
               {/*店家載具*/}
-              <Card style={{...this.style, border: this.state.clickFirst ? '#B2DFDB solid 2px' : ''}} className={indexStyle.RaisedButton_noRadius} onClick={this.handleChangeForm0}>
+              <Card style={{...this.style, border: this.state.clickFirst ? '#B2DFDB solid 2px' : ''}} className={indexStyle.RaisedButton_noRadius} onClick={this.handleChangeForm0} value={1}>
                 <CardTitle title="使用店家載具" style={{textAlign: 'center' }} titleColor="#9E9E9E"/>
                 <CardText style={{ textAlign: 'center'}} color={'#9E9E9E'} >
                   WeMo將使用您的EMAIL做為店家載具<br/>
@@ -134,7 +171,7 @@ class App extends React.Component {
 
               <div style={{position: 'fixed', bottom: 0, left: 0, width: '100%', display: this.state.isActive ? 'none' : '' }} >
                 <RaisedButton label="取消" className={indexStyle.RaisedButton_noRadius} style={{width: '50%'}} backgroundColor={'#B2DFDB'} labelColor={'#FFFFFF'} />
-                <RaisedButton label="確認" className={indexStyle.RaisedButton_noRadius} style={{width: '50%', display: this.state.clickState ? 'none':'inline-block'}} backgroundColor={'#81D4FA'} labelColor={'#FFFFFF'} />
+                <RaisedButton label="確認" type="submit" className={indexStyle.RaisedButton_noRadius} style={{width: '50%', display: this.state.clickState ? 'none':'inline-block'}} backgroundColor={'#81D4FA'} labelColor={'#FFFFFF'} />
                 <RaisedButton label="請洽客服" className={indexStyle.RaisedButton_noRadius} disabled={true} style={{width: '50%', display: this.state.clickState ? 'inline-block':'none' }} labelColor={'#FFFFFF'} />
               </div>
             </div>
