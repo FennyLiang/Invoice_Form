@@ -102,8 +102,10 @@ class App extends React.Component {
         <div style={ {...this.fadeinStyle, paddingLeft: 20, paddingRight: 20 } } className={indexStyle.fadeIn} >
 
           <h2 style={{textAlign: 'center' }}>發票設定</h2>
-          <h5 style={{display: this.state.isActive ? '' : 'none' }}>您目前的選擇</h5>
-          <h5 style={{display: this.state.isActive ? 'none' : '' }}>請選擇您的發票方式</h5>
+          {/*當isChangingInvoiceType等於false這件事是否為真？ => 不是，所以顯示 */}
+          <h5 style={{display: this.state.isChangingInvoiceType ? 'none' : '' }}>您目前的選擇</h5>
+          {/*當isChangingInvoiceType等於false這件事是否為真？ => 是，所以顯示 */}
+          <h5 style={{display: this.state.isChangingInvoiceType ? '' : 'none' }}>請選擇您的發票方式</h5>
 
           {/*店家載具*/}
           <Card className={`${indexStyle.card} ${this.state.isChangingInvoiceType && (this.state.selectedInvoiceType == InvoiceType.Email) ? indexStyle.selectedCard : ''}`}
@@ -116,9 +118,6 @@ class App extends React.Component {
               中獎會主動寄出紙本發票給您
             </CardText>
           </Card>
-          {/*<RaisedButton label="更改發票方式" fullWidth={true} primary={true}*/}
-                        {/*onClick={this.button_click}*/}
-                        {/*style={{display: this.state.isActive ? '' : 'none' }}/>*/}
 
           {/*手機條碼*/}
           <Card className={`${indexStyle.card} ${this.state.isChangingInvoiceType && (this.state.selectedInvoiceType == InvoiceType.PhoneNumber) ? indexStyle.selectedCard : ''}`}
@@ -138,7 +137,7 @@ class App extends React.Component {
           </Card>
 
           {/*捐贈*/}
-          <Card className={` ${indexStyle.card} ${this.state.isChangingInvoiceType && (this.state.selectedInvoiceType == Invoice.Donate) ? indexStyle.selectedCard: ''}`}
+          <Card className={` ${indexStyle.card} ${ this.state.isChangingInvoiceType && (this.state.selectedInvoiceType == InvoiceType.Donate) ? indexStyle.selectedCard: ''}`}
               expanded={this.state.selectedInvoiceType == InvoiceType.Donate}
               onClick={ this.changeInvoiceType.bind(this, InvoiceType.Donate)}
               hidden={!(this.state.selectedInvoiceType == InvoiceType.Donate) && !this.state.isChangingInvoiceType}
@@ -155,7 +154,7 @@ class App extends React.Component {
           </Card>
 
           {/*其他*/}
-          <Card className={` ${indexStyle.card} ${this.state.isChangingInvoiceType && (this.state.selectedInvoiceType == Invoice.CitizenDigitalCertification) ? indexStyle.selectedCard: ''}`}
+          <Card className={` ${indexStyle.card} ${this.state.isChangingInvoiceType && (this.state.selectedInvoiceType == InvoiceType.CitizenDigitalCertification) ? indexStyle.selected_grey: ''}`}
                 expanded={this.state.selectedInvoiceType == InvoiceType.CitizenDigitalCertification}
                 onClick={ this.changeInvoiceType.bind(this, InvoiceType.CitizenDigitalCertification)}
                 hidden={!(this.state.selectedInvoiceType == InvoiceType.CitizenDigitalCertification) && !this.state.isChangingInvoiceType}
@@ -170,32 +169,38 @@ class App extends React.Component {
                        onChange={this.handleTextField.bind(this, 'citizenCode')}
                        fullWidth={true} />
           </Card>
+          {/*當isChangingInvoiceType等於true的時候出現button，此為設button的相反狀態，而不是真的更改狀態*/}
+          { !this.state.isChangingInvoiceType &&
+            <RaisedButton className={indexStyle.RaisedButton_noRadius} label="更改發票方式" fullWidth={true} primary={true} onClick={this.startChangeInvoiceType.bind(this)} />
+          }
 
-
-          <div style={{position: 'relative', marginBottom: 10, padding: 0, display: this.state.isActive ? 'none' : ''}}>
-            <h4 style={{color:'#9E9E9E', lineHeight: 1.5, textAlign:'left', fontSize: 15.5}}>
-              為了響應環保，未得獎者本公司不提供紙本發票索取喔。請大家跟我們一起愛護這個地球 >_^
-            </h4>
-          </div>
-          <div style={{...this.style}}></div>
-
-          <div style={{position: 'fixed', bottom: 0, left: 0, width: '100%', display: this.state.isActive ? 'none' : '' }} >
-            <RaisedButton label="取消"
-                          className={indexStyle.RaisedButton_noRadius}
-                          style={{width: '50%'}} backgroundColor={'#B2DFDB'}
-                          labelColor={'#FFFFFF'} />
-            <RaisedButton label="確認" type="submit"
-                          className={indexStyle.RaisedButton_noRadius}
-                          style={{width: '50%', display: this.state.clickState ? 'none':'inline-block'}}
-                          backgroundColor={'#81D4FA'}
-                          labelColor={'#FFFFFF'} />
-            <RaisedButton label="請洽客服" className={indexStyle.RaisedButton_noRadius}
-                          disabled={true}
-                          style={{width: '50%', display: this.state.clickState ? 'inline-block':'none' }}
-                          labelColor={'#FFFFFF'} />
+          { this.state.isChangingInvoiceType &&
+          <div>
+            <div style={{position: 'relative', marginBottom: 10, padding: 0, display: this.state.isActive ? 'none' : ''}}>
+              <h4 style={{color:'#9E9E9E', lineHeight: 1.5, textAlign:'left', fontSize: 15.5}}>
+                為了響應環保，未得獎者本公司不提供紙本發票索取喔。請大家跟我們一起愛護這個地球 >_^
+              </h4>
+            </div>
+            <div style={{...this.style}}></div>
+            <div style={{position: 'fixed', bottom: 0, left: 0, width: '100%'}} >
+              <RaisedButton label="取消" className={indexStyle.RaisedButton_noRadius} style={{width: '50%'}} backgroundColor={'#B2DFDB'} labelColor={'#FFFFFF'} />
+              { this.state.selectedInvoiceType == InvoiceType.CitizenDigitalCertification ?
+                <RaisedButton label="請洽客服" className={indexStyle.RaisedButton_noRadius}
+                              disabled={true}
+                              style={{width: '50%' }}
+                              labelColor={'#FFFFFF'} />
+                :
+                <RaisedButton label="確認" type="submit"
+                              className={indexStyle.RaisedButton_noRadius}
+                              style={{width: '50%', display: this.state.clickState ? 'none':'inline-block'}}
+                              backgroundColor={'#81D4FA'}
+                              labelColor={'#FFFFFF'} />
+              }
           </div>
         </div>
-      </MuiThemeProvider>
+      }
+      </div>
+    </MuiThemeProvider>
     )
   }
 }
