@@ -6,6 +6,15 @@
     border: #B0BEC5 solid 3px;
 }
 
+.selectedCard {
+    border: #B2DFDB solid 2px;
+}
+
+.card {
+    padding: 10px 20px;
+    margin-bottom: 15px;
+}
+
 html {
     height: 100%;
     color: #9E9E9E

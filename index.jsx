@@ -37,28 +37,21 @@ class App extends React.Component {
     children: React.PropTypes.node,
   };
 
-  // handleExpandChangeForm1 = () => {
-  //   var expanedFormOne = !this.state.expanedForm1;
-  //   this.setState({expanedForm1: expanedFormOne, expanedForm2:false, clickState:false, clickFirst:false});
-  // };
-  //
-  // handleExpandChangeForm2 = () => {
-  //   var expanedFormTwo = !this.state.expanedForm2;
-  //   this.setState({expanedForm2: expanedFormTwo, expanedForm1:false, clickState:false, clickFirst:false});
-  // };
-  // handleChangeForm3 = () => {
-  //   var expanedFormThree = !this.state.clickState;
-  //   this.setState({clickState: expanedFormThree, expanedForm1: false, expanedForm2:false, clickFirst:false});
-  // };
-  //
-  // handleChangeForm0 = () => {
-  //   var expanedFormZero = !this.state.clickFirst;
-  //   this.setState({clickFirst: expanedFormZero, expanedForm1: false, expanedForm2:false, clickState:false});
-  // };
-  //
-  // button_click = () => {
-  //   this.setState({isActive: false});
-  // };
+  startChangeInvoiceType() {
+   this.setState({ isChangingInvoiceType: true });
+  }
+
+  changeInvoiceType(type) {
+    this.setState({ selectedInvoiceType: type });
+  }
+
+  handleTextField(fieldName, event) {
+    let nextState ={};
+    nextState[fieldName] = event.target.value;
+
+    this.setState(nextState);
+  }
+
 
   // fetch briareus api
 
@@ -106,67 +99,76 @@ class App extends React.Component {
     return (
       <MuiThemeProvider>
 
-        <div style={ {...this.fadeinStyle} } className={indexStyle.fadeIn} >
+        <div style={ {...this.fadeinStyle, paddingLeft: 20, paddingRight: 20 } } className={indexStyle.fadeIn} >
 
           <h2 style={{textAlign: 'center' }}>發票設定</h2>
           <h5 style={{display: this.state.isActive ? '' : 'none' }}>您目前的選擇</h5>
           <h5 style={{display: this.state.isActive ? 'none' : '' }}>請選擇您的發票方式</h5>
 
           {/*店家載具*/}
-          <Card style={{...this.style, border: this.state.clickFirst ? '#B2DFDB solid 2px' : ''}}
-                className={indexStyle.RaisedButton_noRadius}
-                onClick={this.handleChangeForm0} value={1}>
-
+          <Card className={`${indexStyle.card} ${this.state.isChangingInvoiceType && (this.state.selectedInvoiceType == InvoiceType.Email) ? indexStyle.selectedCard : ''}`}
+                onClick={this.changeInvoiceType.bind(this, InvoiceType.Email)}
+                hidden={!(this.state.selectedInvoiceType == InvoiceType.Email) && !this.state.isChangingInvoiceType}
+                style={this.state.isChangingInvoiceType ? {}:{ marginBottom: 0 }} >
             <CardTitle title="使用店家載具" style={{textAlign: 'center' }} titleColor="#9E9E9E"/>
             <CardText style={{ textAlign: 'center'}} color={'#9E9E9E'} >
               WeMo將使用您的EMAIL做為店家載具<br/>
               中獎會主動寄出紙本發票給您
             </CardText>
           </Card>
-          <RaisedButton label="更改發票方式" fullWidth={true} primary={true}
-                        onClick={this.button_click}
-                        style={{display: this.state.isActive ? '' : 'none' }}/>
+          {/*<RaisedButton label="更改發票方式" fullWidth={true} primary={true}*/}
+                        {/*onClick={this.button_click}*/}
+                        {/*style={{display: this.state.isActive ? '' : 'none' }}/>*/}
 
           {/*手機條碼*/}
-          <Card style={{...this.style, display: this.state.isActive ? 'none' : '', border: this.state.expanedForm1 ? '#B2DFDB solid 2px' : '' }}
-                expanded={this.state.expanedForm1}
-                onExpandChange={this.handleExpandChangeForm1} >
-
+          <Card className={`${indexStyle.card} ${this.state.isChangingInvoiceType && (this.state.selectedInvoiceType == InvoiceType.PhoneNumber) ? indexStyle.selectedCard : ''}`}
+                expanded={this.state.selectedInvoiceType == InvoiceType.PhoneNumber}
+                onClick={this.changeInvoiceType.bind(this, InvoiceType.PhoneNumber)}
+                hidden={!(this.state.selectedInvoiceType == InvoiceType.PhoneNumber) && !this.state.isChangingInvoiceType}
+                style={this.state.isChangingInvoiceType ? {}:{ marginBottom: 0 }} >
             <CardTitle title="手機條碼" style={{textAlign: 'center'}} actAsExpander={true} titleColor="#9E9E9E" />
             <CardText style={{ textAlign: 'center' }} actAsExpander={true} color={'#9E9E9E'} >
               將發票存入手機條碼當中
             </CardText>
             <TextField className={indexStyle.strechHeightAnimation}
-                       style={this.state.expanedForm1 ? { opacity: 1 } : { height: 0, opacity: 0 }}
-                       hintText="請輸入您的手機條碼" fullWidth={true} />
+                       style={this.state.selectedInvoiceType == InvoiceType.PhoneNumber ? { opacity: 1 } : { height: 0, opacity: 0 }}
+                       hintText="請輸入您的手機條碼"
+                       onChange={this.handleTextField.bind(this, 'phoneNumber')}
+                       fullWidth={true} />
           </Card>
 
           {/*捐贈*/}
-          <Card style={{...this.style, display: this.state.isActive ? 'none' : '', border: this.state.expanedForm2 ? '#B2DFDB solid 2px' : '' }}
-                expanded={this.state.expanedForm2}
-                onExpandChange={this.handleExpandChangeForm2} >
-
+          <Card className={` ${indexStyle.card} ${this.state.isChangingInvoiceType && (this.state.selectedInvoiceType == Invoice.Donate) ? indexStyle.selectedCard: ''}`}
+              expanded={this.state.selectedInvoiceType == InvoiceType.Donate}
+              onClick={ this.changeInvoiceType.bind(this, InvoiceType.Donate)}
+              hidden={!(this.state.selectedInvoiceType == InvoiceType.Donate) && !this.state.isChangingInvoiceType}
+              style={this.state.isChangingInvoiceType ? {}:{ marginBottom: 0 }} >
             <CardTitle title="捐贈" style={{textAlign: 'center'}} actAsExpander={true} titleColor="#9E9E9E" />
             <CardText style={{ textAlign: 'center' }} actAsExpander={true} color={'#9E9E9E'} >
               將發票捐贈
             </CardText>
             <TextField className={indexStyle.strechHeightAnimation}
-                       style={this.state.expanedForm2 ? { opacity: 1 } : { height: 0, opacity: 0 }}
+                       style={this.state.selectedInvoiceType == InvoiceType.Donate ? { opacity: 1 } : { height: 0, opacity: 0 }}
                        hintText="請輸入您的愛心碼(預設為陽光基金會)"
+                       onChange={this.handleTextField.bind(this, 'donateCode')}
                        fullWidth={true} />
           </Card>
 
           {/*其他*/}
-          <Card style={{...this.style, marginBottom: 30, display: this.state.isActive ? 'none' : '', border: this.state.clickState ? '#B0BEC5 solid 2px' : '' }}
-                expanded={this.state.clickState}
-                onExpandChange={this.handleChangeForm3} >
+          <Card className={` ${indexStyle.card} ${this.state.isChangingInvoiceType && (this.state.selectedInvoiceType == Invoice.CitizenDigitalCertification) ? indexStyle.selectedCard: ''}`}
+                expanded={this.state.selectedInvoiceType == InvoiceType.CitizenDigitalCertification}
+                onClick={ this.changeInvoiceType.bind(this, InvoiceType.CitizenDigitalCertification)}
+                hidden={!(this.state.selectedInvoiceType == InvoiceType.CitizenDigitalCertification) && !this.state.isChangingInvoiceType}
+                style={this.state.isChangingInvoiceType ? {}:{ marginBottom: 0 }} >
             <CardTitle title="自然人憑證" style={{textAlign: 'center'}} actAsExpander={true} titleColor="#9E9E9E" />
             <CardText style={{ textAlign: 'center' }} actAsExpander={true} color={'#9E9E9E'} >
               將發票存入自然人憑證
             </CardText>
             <TextField className={indexStyle.strechHeightAnimation}
-                       style={this.state.clickState ? { opacity: 1 } : { height: 0, opacity: 0 }}
-                       hintText="請輸入您的自然人憑證" fullWidth={true} />
+                       style={this.state.selectedInvoiceType == InvoiceType.CitizenDigitalCertification ? { opacity: 1 } : { height: 0, opacity: 0 }}
+                       hintText="請輸入您的自然人憑證"
+                       onChange={this.handleTextField.bind(this, 'citizenCode')}
+                       fullWidth={true} />
           </Card>
 
 
