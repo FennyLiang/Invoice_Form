@@ -6,6 +6,7 @@ import injectTapEventPlugin from 'react-tap-event-plugin';
 import RaisedButton from 'material-ui/RaisedButton';
 import TextField from 'material-ui/TextField';
 import indexStyle from './index.css';
+import 'whatwg-fetch';
 import Spinner from 'react-spinkit';
 
 
@@ -30,7 +31,7 @@ class App extends React.Component {
       donateCode: '',
       citizenCode: '',
     };
-
+    this.submitForm=this.submitForm.bind(this);
 
   }
   static propTypes = {
@@ -53,7 +54,55 @@ class App extends React.Component {
   }
 
 
+
+  async submitForm() {
+  //find value
+    var resultVal = '';
+    switch (this.state.selectedInvoiceType){
+      case InvoiceType.Email:
+        break;
+      case InvoiceType.PhoneNumber:
+        resultVal = this.state.phoneNumber;
+        console.log(this.state.phoneNumber);
+        break;
+      case InvoiceType.Donate:
+        resultVal = this.state.donateCode;
+        console.log(this.state.donateCode);
+        break;
+      case InvoiceType.CitizenDigitalCertification:
+        resultVal = this.state.citizenCode;
+        console.log(this.state.citizenCode);
+        break;
+      default:
+        break;
+    return (resultVal, this.state.selectedInvoiceType);
+    }
+    // fetch api
+    const resp = await fetch('https://briareus-qat.wemoscooter.com/api/invoice', {
+      method: 'POST',
+      headers: {
+        Accept: 'application/json',
+        'Content-Type': 'application/json'
+      },
+      mode: 'cors',
+
+      body: JSON.stringify({
+        type: this.state.selectedInvoiceType,
+        phoneNum: parseInt(resultVal)
+      }),
+    });
+      // .then(res => res.json())
+      // .then(console.log);
+    const {result} = await resp.json();
+    console.log(result);
+
+  }
+
   // fetch briareus api
+
+  componentWillMount() {
+    this.getInitType();
+  }
 
   getParameterByName =(name, url) => {
     if (!url) {
@@ -69,13 +118,25 @@ class App extends React.Component {
   };
 
 
-  // getInitialState() {
-  //   return {position: true};
-  // };
-  //
-  // componentDidMount() {
-  //   setTimeout(function() { this.setState({position: false}); }.bind(this), 1000)
-  // };
+  async getInitType (decoUrl) {
+    var resultToken = this.getParameterByName('token', decoUrl);
+    console.log(resultToken);
+    const resp = await fetch('https://briareus-qat.wemoscooter.com/api/invoice', {
+      method: 'GET',
+      headers: {
+        Accept: 'application/json',
+        'Content-Type': 'application/json'
+      },
+      mode: 'cors',
+
+    });
+
+    const { result, type } = await resp.json();
+    console.log(result, type);
+
+    this.setState({ selectedInvoiceType: type});
+  }
+
 
 
   style =  {
@@ -121,7 +182,7 @@ class App extends React.Component {
 
           {/*手機條碼*/}
           <Card className={`${indexStyle.card} ${this.state.isChangingInvoiceType && (this.state.selectedInvoiceType == InvoiceType.PhoneNumber) ? indexStyle.selectedCard : ''}`}
-                expanded={this.state.selectedInvoiceType == InvoiceType.PhoneNumber}
+                expanded={this.state.selectedInvoiceType == InvoiceType.PhoneNumber }
                 onClick={this.changeInvoiceType.bind(this, InvoiceType.PhoneNumber)}
                 hidden={!(this.state.selectedInvoiceType == InvoiceType.PhoneNumber) && !this.state.isChangingInvoiceType}
                 style={this.state.isChangingInvoiceType ? {}:{ marginBottom: 0 }} >
@@ -130,10 +191,13 @@ class App extends React.Component {
               將發票存入手機條碼當中
             </CardText>
             <TextField className={indexStyle.strechHeightAnimation}
-                       style={this.state.selectedInvoiceType == InvoiceType.PhoneNumber ? { opacity: 1 } : { height: 0, opacity: 0 }}
+                       style={ this.state.isChangingInvoiceType && this.state.selectedInvoiceType == InvoiceType.PhoneNumber ? { opacity: 1 } : { height: 0, opacity: 0 }}
                        hintText="請輸入您的手機條碼"
+                       errorText="此欄位為必填"
+                       errorStyle={{color: '#FF8A65'}}
                        onChange={this.handleTextField.bind(this, 'phoneNumber')}
-                       fullWidth={true} />
+                       fullWidth={true}
+                       />
           </Card>
 
           {/*捐贈*/}
@@ -147,8 +211,10 @@ class App extends React.Component {
               將發票捐贈
             </CardText>
             <TextField className={indexStyle.strechHeightAnimation}
-                       style={this.state.selectedInvoiceType == InvoiceType.Donate ? { opacity: 1 } : { height: 0, opacity: 0 }}
+                       style={ this.state.isChangingInvoiceType && this.state.selectedInvoiceType == InvoiceType.Donate ? { opacity: 1 } : { height: 0, opacity: 0 }}
                        hintText="請輸入您的愛心碼(預設為陽光基金會)"
+                       errorText="此欄位為必填"
+                       errorStyle={{color: '#FF8A65'}}
                        onChange={this.handleTextField.bind(this, 'donateCode')}
                        fullWidth={true} />
           </Card>
@@ -164,8 +230,10 @@ class App extends React.Component {
               將發票存入自然人憑證
             </CardText>
             <TextField className={indexStyle.strechHeightAnimation}
-                       style={this.state.selectedInvoiceType == InvoiceType.CitizenDigitalCertification ? { opacity: 1 } : { height: 0, opacity: 0 }}
+                       style={ this.state.isChangingInvoiceType && this.state.selectedInvoiceType == InvoiceType.CitizenDigitalCertification ? { opacity: 1 } : { height: 0, opacity: 0 }}
                        hintText="請輸入您的自然人憑證"
+                       errorText="此欄位為必填"
+                       errorStyle={{color: '#FF8A65'}}
                        onChange={this.handleTextField.bind(this, 'citizenCode')}
                        fullWidth={true} />
           </Card>
@@ -194,7 +262,8 @@ class App extends React.Component {
                               className={indexStyle.RaisedButton_noRadius}
                               style={{width: '50%', display: this.state.clickState ? 'none':'inline-block'}}
                               backgroundColor={'#81D4FA'}
-                              labelColor={'#FFFFFF'} />
+                              labelColor={'#FFFFFF'}
+                              onClick={this.submitForm} />
               }
           </div>
         </div>

@@ -4,7 +4,7 @@ var ExtractTextPlugin = require('extract-text-webpack-plugin');
 var combineLoaders = require('webpack-combine-loaders');
 
 module.exports = {
-  entry: './index.jsx',
+  entry: ['babel-polyfill','./index.jsx'],
   output: {
     filename: './bundle.js',
 
