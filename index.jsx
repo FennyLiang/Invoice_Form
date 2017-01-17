@@ -50,6 +50,16 @@ class App extends React.Component {
     let nextState ={};
     nextState[fieldName] = event.target.value;
 
+    // var phoneRegex = "\/[A-Z0-9]" //手機條碼
+    // var phoneRegex = "\[0-9]" //捐贈
+    var phoneRegex = /^[A-Z]{2}\d{14}$/;
+    if (nextState[fieldName].match(phoneRegex)) {
+     console.log('success')
+    } else {
+      console.log('Error')
+    }
+
+
     this.setState(nextState);
   }
 
@@ -57,6 +67,9 @@ class App extends React.Component {
 
   async submitForm() {
   //find value
+
+
+
     var resultVal = '';
     switch (this.state.selectedInvoiceType){
       case InvoiceType.Email:
@@ -185,13 +198,14 @@ class App extends React.Component {
                 expanded={this.state.selectedInvoiceType == InvoiceType.PhoneNumber }
                 onClick={this.changeInvoiceType.bind(this, InvoiceType.PhoneNumber)}
                 hidden={!(this.state.selectedInvoiceType == InvoiceType.PhoneNumber) && !this.state.isChangingInvoiceType}
-                style={this.state.isChangingInvoiceType ? {}:{ marginBottom: 0 }} >
+                style={this.state.isChangingInvoiceType ? {}:{ marginBottom: 0 }}>
             <CardTitle title="手機條碼" style={{textAlign: 'center'}} actAsExpander={true} titleColor="#9E9E9E" />
             <CardText style={{ textAlign: 'center' }} actAsExpander={true} color={'#9E9E9E'} >
               將發票存入手機條碼當中
             </CardText>
             <TextField className={indexStyle.strechHeightAnimation}
                        style={ this.state.isChangingInvoiceType && this.state.selectedInvoiceType == InvoiceType.PhoneNumber ? { opacity: 1 } : { height: 0, opacity: 0 }}
+                       hidden={!this.state.isChangingInvoiceType}
                        hintText="請輸入您的手機條碼"
                        errorText="此欄位為必填"
                        errorStyle={{color: '#FF8A65'}}
@@ -212,6 +226,7 @@ class App extends React.Component {
             </CardText>
             <TextField className={indexStyle.strechHeightAnimation}
                        style={ this.state.isChangingInvoiceType && this.state.selectedInvoiceType == InvoiceType.Donate ? { opacity: 1 } : { height: 0, opacity: 0 }}
+                       hidden={!this.state.isChangingInvoiceType}
                        hintText="請輸入您的愛心碼(預設為陽光基金會)"
                        errorText="此欄位為必填"
                        errorStyle={{color: '#FF8A65'}}
@@ -231,6 +246,7 @@ class App extends React.Component {
             </CardText>
             <TextField className={indexStyle.strechHeightAnimation}
                        style={ this.state.isChangingInvoiceType && this.state.selectedInvoiceType == InvoiceType.CitizenDigitalCertification ? { opacity: 1 } : { height: 0, opacity: 0 }}
+                       hidden={!this.state.isChangingInvoiceType}
                        hintText="請輸入您的自然人憑證"
                        errorText="此欄位為必填"
                        errorStyle={{color: '#FF8A65'}}
@@ -252,19 +268,19 @@ class App extends React.Component {
             <div style={{...this.style}}></div>
             <div style={{position: 'fixed', bottom: 0, left: 0, width: '100%'}} >
               <RaisedButton label="取消" className={indexStyle.RaisedButton_noRadius} style={{width: '50%'}} backgroundColor={'#B2DFDB'} labelColor={'#FFFFFF'} />
-              { this.state.selectedInvoiceType == InvoiceType.CitizenDigitalCertification ?
-                <RaisedButton label="請洽客服" className={indexStyle.RaisedButton_noRadius}
-                              disabled={true}
-                              style={{width: '50%' }}
-                              labelColor={'#FFFFFF'} />
-                :
+              {/*{ this.state.selectedInvoiceType == InvoiceType.CitizenDigitalCertification ?*/}
+                {/*<RaisedButton label="請洽客服" className={indexStyle.RaisedButton_noRadius}*/}
+                              {/*disabled={true}*/}
+                              {/*style={{width: '50%' }}*/}
+                              {/*labelColor={'#FFFFFF'} />*/}
+                {/*:*/}
                 <RaisedButton label="確認" type="submit"
                               className={indexStyle.RaisedButton_noRadius}
                               style={{width: '50%', display: this.state.clickState ? 'none':'inline-block'}}
                               backgroundColor={'#81D4FA'}
                               labelColor={'#FFFFFF'}
                               onClick={this.submitForm} />
-              }
+              {/*}*/}
           </div>
         </div>
       }
