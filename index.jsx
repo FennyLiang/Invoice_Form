@@ -30,6 +30,10 @@ class App extends React.Component {
       phoneNumber: '',
       donateCode: '',
       citizenCode: '',
+      phoneErrorText: '',
+      donateErrorText: '',
+      citizenErrorText: '',
+      disable: false,
     };
     this.submitForm=this.submitForm.bind(this);
 
@@ -39,7 +43,7 @@ class App extends React.Component {
   };
 
   startChangeInvoiceType() {
-   this.setState({ isChangingInvoiceType: true });
+    this.setState({ isChangingInvoiceType: true });
   }
 
   changeInvoiceType(type) {
@@ -48,17 +52,39 @@ class App extends React.Component {
 
   handleTextField(fieldName, event) {
     let nextState ={};
+    var phoneRegex = /^\/[A-Z0-9]{7}/ //手機條碼
+    var donateRegex = /^[0-9]{3,7}$/ //捐贈
+    var citizenRegex = /^[A-Z]{2}\d{14}$/;
+
     nextState[fieldName] = event.target.value;
 
-    // var phoneRegex = "\/[A-Z0-9]" //手機條碼
-    // var phoneRegex = "\[0-9]" //捐贈
-    var phoneRegex = /^[A-Z]{2}\d{14}$/;
-    if (nextState[fieldName].match(phoneRegex)) {
-     console.log('success')
-    } else {
-      console.log('Error')
+    switch (this.state.selectedInvoiceType){
+      case InvoiceType.Email:
+        break;
+      case InvoiceType.PhoneNumber:
+        if (nextState[fieldName].match(phoneRegex)) {
+          this.setState({ phoneErrorText: '', disable: false })
+        } else {
+          this.setState({ phoneErrorText: '格式不符，請輸入正確手機條碼。', disable: true })
+        }
+        break;
+      case InvoiceType.Donate:
+        if (nextState[fieldName].match(donateRegex)){
+          this.setState({ donateErrorText: '', disable: false })
+        }else {
+          this.setState({ donateErrorText: '格式不符，請輸入3~7位數字愛心碼。', disable: true })
+        }
+        break;
+      case InvoiceType.CitizenDigitalCertification:
+        if (nextState[fieldName].match(citizenRegex)){
+          this.setState({ citizenErrorText: '', disable: false })
+        }else {
+          this.setState({ citizenErrorText: '格式不符，請輸入開頭2碼英文字+14碼數字。', disable: true })
+        }
+        break;
+      default:
+        break;
     }
-
 
     this.setState(nextState);
   }
@@ -66,10 +92,7 @@ class App extends React.Component {
 
 
   async submitForm() {
-  //find value
-
-
-
+    //find value
     var resultVal = '';
     switch (this.state.selectedInvoiceType){
       case InvoiceType.Email:
@@ -88,7 +111,7 @@ class App extends React.Component {
         break;
       default:
         break;
-    return (resultVal, this.state.selectedInvoiceType);
+        return (resultVal, this.state.selectedInvoiceType);
     }
     // fetch api
     const resp = await fetch('https://briareus-qat.wemoscooter.com/api/invoice', {
@@ -104,14 +127,26 @@ class App extends React.Component {
         phoneNum: parseInt(resultVal)
       }),
     });
-      // .then(res => res.json())
-      // .then(console.log);
+    // .then(res => res.json())
+    // .then(console.log);
     const {result} = await resp.json();
     console.log(result);
 
+    if(result === "success"){
+      window.location.href = 'https://briareus-qat.wemoscooter.com?action=closed'
+    }else{
+      if(this.state.selectedInvoiceType == InvoiceType.PhoneNumber){
+        this.setState({ phoneErrorText: '條碼錯誤，請輸入正確手機條碼。', disable: true })
+      }else if(this.state.selectedInvoiceType == InvoiceType.Donate){
+        this.setState({ donateErrorText: '愛心碼錯誤，請輸入正確愛心碼。', disable: true })
+      } else {
+        this.setState({ citizenErrorText: '憑證錯誤，請輸入正確自然人憑證。', disable: true })
+      }
+    }
+
   }
 
-  // fetch briareus api
+  // Get user Default Setting
 
   componentWillMount() {
     this.getInitType();
@@ -207,19 +242,19 @@ class App extends React.Component {
                        style={ this.state.isChangingInvoiceType && this.state.selectedInvoiceType == InvoiceType.PhoneNumber ? { opacity: 1 } : { height: 0, opacity: 0 }}
                        hidden={!this.state.isChangingInvoiceType}
                        hintText="請輸入您的手機條碼"
-                       errorText="此欄位為必填"
+                       errorText={this.state.phoneErrorText}
                        errorStyle={{color: '#FF8A65'}}
                        onChange={this.handleTextField.bind(this, 'phoneNumber')}
                        fullWidth={true}
-                       />
+            />
           </Card>
 
           {/*捐贈*/}
           <Card className={` ${indexStyle.card} ${ this.state.isChangingInvoiceType && (this.state.selectedInvoiceType == InvoiceType.Donate) ? indexStyle.selectedCard: ''}`}
-              expanded={this.state.selectedInvoiceType == InvoiceType.Donate}
-              onClick={ this.changeInvoiceType.bind(this, InvoiceType.Donate)}
-              hidden={!(this.state.selectedInvoiceType == InvoiceType.Donate) && !this.state.isChangingInvoiceType}
-              style={this.state.isChangingInvoiceType ? {}:{ marginBottom: 0 }} >
+                expanded={this.state.selectedInvoiceType == InvoiceType.Donate}
+                onClick={ this.changeInvoiceType.bind(this, InvoiceType.Donate)}
+                hidden={!(this.state.selectedInvoiceType == InvoiceType.Donate) && !this.state.isChangingInvoiceType}
+                style={this.state.isChangingInvoiceType ? {}:{ marginBottom: 0 }} >
             <CardTitle title="捐贈" style={{textAlign: 'center'}} actAsExpander={true} titleColor="#9E9E9E" />
             <CardText style={{ textAlign: 'center' }} actAsExpander={true} color={'#9E9E9E'} >
               將發票捐贈
@@ -228,7 +263,7 @@ class App extends React.Component {
                        style={ this.state.isChangingInvoiceType && this.state.selectedInvoiceType == InvoiceType.Donate ? { opacity: 1 } : { height: 0, opacity: 0 }}
                        hidden={!this.state.isChangingInvoiceType}
                        hintText="請輸入您的愛心碼(預設為陽光基金會)"
-                       errorText="此欄位為必填"
+                       errorText={this.state.donateErrorText}
                        errorStyle={{color: '#FF8A65'}}
                        onChange={this.handleTextField.bind(this, 'donateCode')}
                        fullWidth={true} />
@@ -248,14 +283,14 @@ class App extends React.Component {
                        style={ this.state.isChangingInvoiceType && this.state.selectedInvoiceType == InvoiceType.CitizenDigitalCertification ? { opacity: 1 } : { height: 0, opacity: 0 }}
                        hidden={!this.state.isChangingInvoiceType}
                        hintText="請輸入您的自然人憑證"
-                       errorText="此欄位為必填"
+                       errorText={this.state.citizenErrorText}
                        errorStyle={{color: '#FF8A65'}}
                        onChange={this.handleTextField.bind(this, 'citizenCode')}
                        fullWidth={true} />
           </Card>
           {/*當isChangingInvoiceType等於true的時候出現button，此為設button的相反狀態，而不是真的更改狀態*/}
           { !this.state.isChangingInvoiceType &&
-            <RaisedButton className={indexStyle.RaisedButton_noRadius} label="更改發票方式" fullWidth={true} primary={true} onClick={this.startChangeInvoiceType.bind(this)} />
+          <RaisedButton className={indexStyle.RaisedButton_noRadius} label="更改發票方式" fullWidth={true} primary={true} onClick={this.startChangeInvoiceType.bind(this)} />
           }
 
           { this.state.isChangingInvoiceType &&
@@ -269,23 +304,24 @@ class App extends React.Component {
             <div style={{position: 'fixed', bottom: 0, left: 0, width: '100%'}} >
               <RaisedButton label="取消" className={indexStyle.RaisedButton_noRadius} style={{width: '50%'}} backgroundColor={'#B2DFDB'} labelColor={'#FFFFFF'} />
               {/*{ this.state.selectedInvoiceType == InvoiceType.CitizenDigitalCertification ?*/}
-                {/*<RaisedButton label="請洽客服" className={indexStyle.RaisedButton_noRadius}*/}
-                              {/*disabled={true}*/}
-                              {/*style={{width: '50%' }}*/}
-                              {/*labelColor={'#FFFFFF'} />*/}
-                {/*:*/}
+              {/*<RaisedButton label="請洽客服" className={indexStyle.RaisedButton_noRadius}*/}
+              {/*disabled={true}*/}
+              {/*style={{width: '50%' }}*/}
+              {/*labelColor={'#FFFFFF'} />*/}
+              {/*:*/}
                 <RaisedButton label="確認" type="submit"
-                              className={indexStyle.RaisedButton_noRadius}
-                              style={{width: '50%', display: this.state.clickState ? 'none':'inline-block'}}
-                              backgroundColor={'#81D4FA'}
-                              labelColor={'#FFFFFF'}
-                              onClick={this.submitForm} />
+                className={indexStyle.RaisedButton_noRadius}
+                style={{width: '50%', display: this.state.clickState ? 'none':'inline-block'}}
+                backgroundColor={'#81D4FA'}
+                labelColor={'#FFFFFF'}
+                onClick={this.submitForm}
+                disabled={this.state.disable}/>
               {/*}*/}
+            </div>
           </div>
+          }
         </div>
-      }
-      </div>
-    </MuiThemeProvider>
+      </MuiThemeProvider>
     )
   }
 }
