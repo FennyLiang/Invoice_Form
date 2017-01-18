@@ -30,6 +30,8 @@ class App extends React.Component {
       phoneNumber: '',
       donateCode: '',
       citizenCode: '',
+      errorText: '',
+      disable: false,
     };
     this.submitForm=this.submitForm.bind(this);
 
@@ -48,26 +50,47 @@ class App extends React.Component {
 
   handleTextField(fieldName, event) {
     let nextState ={};
+    var phoneRegex = /^\/[A-Z0-9]{7}/ //手機條碼
+    var donateRegex = /^[0-9]{3,7}$/ //捐贈
+    var citizenRegex = /^[A-Z]{2}\d{14}$/;
+
     nextState[fieldName] = event.target.value;
 
-    // var phoneRegex = "\/[A-Z0-9]" //手機條碼
-    // var phoneRegex = "\[0-9]" //捐贈
-    var phoneRegex = /^[A-Z]{2}\d{14}$/;
-    if (nextState[fieldName].match(phoneRegex)) {
-     console.log('success')
-    } else {
-      console.log('Error')
+    switch (this.state.selectedInvoiceType){
+      case InvoiceType.Email:
+        break;
+      case InvoiceType.PhoneNumber:
+        if (nextState[fieldName].match(phoneRegex)) {
+          this.setState({ errorText: '', disable: false })
+        } else {
+          this.setState({ errorText: '格式不符，請輸入開頭正確條碼。', disable: true })
+        }
+        break;
+      case InvoiceType.Donate:
+        if (nextState[fieldName].match(donateRegex)){
+          this.setState({ errorText: '', disable: false })
+        }else {
+          this.setState({ errorText: '格式不符，請輸入3~7位愛心碼。', disable: true })
+        }
+        break;
+      case InvoiceType.CitizenDigitalCertification:
+        if (nextState[fieldName].match(citizenRegex)){
+          this.setState({ errorText: '', disable: false })
+        }else {
+          this.setState({ errorText: '格式不符，請輸入開頭2碼英文字+14碼數字。', disable: true })
+        }
+        break;
+      default:
+        break;
     }
 
-
-    this.setState(nextState);
+      this.setState(nextState);
   }
 
 
 
   async submitForm() {
   //find value
-
 
 
     var resultVal = '';
@@ -207,7 +230,7 @@ class App extends React.Component {
                        style={ this.state.isChangingInvoiceType && this.state.selectedInvoiceType == InvoiceType.PhoneNumber ? { opacity: 1 } : { height: 0, opacity: 0 }}
                        hidden={!this.state.isChangingInvoiceType}
                        hintText="請輸入您的手機條碼"
-                       errorText="此欄位為必填"
+                       errorText={this.state.errorText}
                        errorStyle={{color: '#FF8A65'}}
                        onChange={this.handleTextField.bind(this, 'phoneNumber')}
                        fullWidth={true}
@@ -228,7 +251,7 @@ class App extends React.Component {
                        style={ this.state.isChangingInvoiceType && this.state.selectedInvoiceType == InvoiceType.Donate ? { opacity: 1 } : { height: 0, opacity: 0 }}
                        hidden={!this.state.isChangingInvoiceType}
                        hintText="請輸入您的愛心碼(預設為陽光基金會)"
-                       errorText="此欄位為必填"
+                       errorText={this.state.errorText}
                        errorStyle={{color: '#FF8A65'}}
                        onChange={this.handleTextField.bind(this, 'donateCode')}
                        fullWidth={true} />
@@ -248,7 +271,7 @@ class App extends React.Component {
                        style={ this.state.isChangingInvoiceType && this.state.selectedInvoiceType == InvoiceType.CitizenDigitalCertification ? { opacity: 1 } : { height: 0, opacity: 0 }}
                        hidden={!this.state.isChangingInvoiceType}
                        hintText="請輸入您的自然人憑證"
-                       errorText="此欄位為必填"
+                       errorText={this.state.errorText}
                        errorStyle={{color: '#FF8A65'}}
                        onChange={this.handleTextField.bind(this, 'citizenCode')}
                        fullWidth={true} />
@@ -279,7 +302,8 @@ class App extends React.Component {
                               style={{width: '50%', display: this.state.clickState ? 'none':'inline-block'}}
                               backgroundColor={'#81D4FA'}
                               labelColor={'#FFFFFF'}
-                              onClick={this.submitForm} />
+                              onClick={this.submitForm}
+                              disabled={this.state.disable}/>
               {/*}*/}
           </div>
         </div>
