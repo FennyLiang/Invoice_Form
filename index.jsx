@@ -37,6 +37,7 @@ class App extends React.Component {
     };
     this.submitForm=this.submitForm.bind(this);
 
+
   }
   static propTypes = {
     children: React.PropTypes.node,
@@ -144,6 +145,12 @@ class App extends React.Component {
       }
     }
 
+  }
+
+  leavePage() {
+    if(this.state.isChangingInvoiceType){
+      window.location.href = 'https://briareus-qat.wemoscooter.com?action=closed'
+    }
   }
 
   // Get user Default Setting
@@ -302,7 +309,12 @@ class App extends React.Component {
             </div>
             <div style={{...this.style}}></div>
             <div style={{position: 'fixed', bottom: 0, left: 0, width: '100%'}} >
-              <RaisedButton label="取消" className={indexStyle.RaisedButton_noRadius} style={{width: '50%'}} backgroundColor={'#B2DFDB'} labelColor={'#FFFFFF'} />
+              <RaisedButton label="取消"
+                            className={indexStyle.RaisedButton_noRadius}
+                            style={{width: '50%'}}
+                            onClick={this.leavePage.bind(this)}
+                            backgroundColor={'#B2DFDB'}
+                            labelColor={'#FFFFFF'} />
               {/*{ this.state.selectedInvoiceType == InvoiceType.CitizenDigitalCertification ?*/}
               {/*<RaisedButton label="請洽客服" className={indexStyle.RaisedButton_noRadius}*/}
               {/*disabled={true}*/}
