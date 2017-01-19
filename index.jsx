@@ -115,7 +115,7 @@ class App extends React.Component {
         return (resultVal, this.state.selectedInvoiceType);
     }
     // fetch api
-    const resp = await fetch('https://briareus-qat.wemoscooter.com/api/invoice', {
+    const resp = await fetch('', {
       method: 'POST',
       headers: {
         Accept: 'application/json',
@@ -176,7 +176,7 @@ class App extends React.Component {
   async getInitType (decoUrl) {
     var resultToken = this.getParameterByName('token', decoUrl);
     console.log(resultToken);
-    const resp = await fetch('https://briareus-qat.wemoscooter.com/api/invoice', {
+    const resp = await fetch('', {
       method: 'GET',
       headers: {
         Accept: 'application/json',
