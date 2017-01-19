@@ -26,7 +26,7 @@ class App extends React.Component {
 
     this.state = {
       isChangingInvoiceType: false,
-      selectedInvoiceType: InvoiceType.Email,
+      selectedInvoiceType: '',
       phoneNumber: '',
       donateCode: '',
       citizenCode: '',
@@ -225,7 +225,7 @@ class App extends React.Component {
 
           {/*店家載具*/}
           <Card className={`${indexStyle.card} ${this.state.isChangingInvoiceType && (this.state.selectedInvoiceType == InvoiceType.Email) ? indexStyle.selectedCard : ''}`}
-                onClick={this.changeInvoiceType.bind(this, InvoiceType.Email)}
+                onTouchTap={this.changeInvoiceType.bind(this, InvoiceType.Email)}
                 hidden={!(this.state.selectedInvoiceType == InvoiceType.Email) && !this.state.isChangingInvoiceType}
                 style={this.state.isChangingInvoiceType ? {}:{ marginBottom: 0 }} >
             <CardTitle title="使用店家載具" style={{textAlign: 'center' }} titleColor="#9E9E9E"/>
@@ -238,7 +238,7 @@ class App extends React.Component {
           {/*手機條碼*/}
           <Card className={`${indexStyle.card} ${this.state.isChangingInvoiceType && (this.state.selectedInvoiceType == InvoiceType.PhoneNumber) ? indexStyle.selectedCard : ''}`}
                 expanded={this.state.selectedInvoiceType == InvoiceType.PhoneNumber }
-                onClick={this.changeInvoiceType.bind(this, InvoiceType.PhoneNumber)}
+                onTouchTap={this.changeInvoiceType.bind(this, InvoiceType.PhoneNumber)}
                 hidden={!(this.state.selectedInvoiceType == InvoiceType.PhoneNumber) && !this.state.isChangingInvoiceType}
                 style={this.state.isChangingInvoiceType ? {}:{ marginBottom: 0 }}>
             <CardTitle title="手機條碼" style={{textAlign: 'center'}} actAsExpander={true} titleColor="#9E9E9E" />
@@ -259,7 +259,7 @@ class App extends React.Component {
           {/*捐贈*/}
           <Card className={` ${indexStyle.card} ${ this.state.isChangingInvoiceType && (this.state.selectedInvoiceType == InvoiceType.Donate) ? indexStyle.selectedCard: ''}`}
                 expanded={this.state.selectedInvoiceType == InvoiceType.Donate}
-                onClick={ this.changeInvoiceType.bind(this, InvoiceType.Donate)}
+                onTouchTap={ this.changeInvoiceType.bind(this, InvoiceType.Donate)}
                 hidden={!(this.state.selectedInvoiceType == InvoiceType.Donate) && !this.state.isChangingInvoiceType}
                 style={this.state.isChangingInvoiceType ? {}:{ marginBottom: 0 }} >
             <CardTitle title="捐贈" style={{textAlign: 'center'}} actAsExpander={true} titleColor="#9E9E9E" />
@@ -279,7 +279,7 @@ class App extends React.Component {
           {/*其他*/}
           <Card className={` ${indexStyle.card} ${this.state.isChangingInvoiceType && (this.state.selectedInvoiceType == InvoiceType.CitizenDigitalCertification) ? indexStyle.selected_grey: ''}`}
                 expanded={this.state.selectedInvoiceType == InvoiceType.CitizenDigitalCertification}
-                onClick={ this.changeInvoiceType.bind(this, InvoiceType.CitizenDigitalCertification)}
+                onTouchTap={ this.changeInvoiceType.bind(this, InvoiceType.CitizenDigitalCertification)}
                 hidden={!(this.state.selectedInvoiceType == InvoiceType.CitizenDigitalCertification) && !this.state.isChangingInvoiceType}
                 style={this.state.isChangingInvoiceType ? {}:{ marginBottom: 0 }} >
             <CardTitle title="自然人憑證" style={{textAlign: 'center'}} actAsExpander={true} titleColor="#9E9E9E" />
@@ -304,7 +304,7 @@ class App extends React.Component {
           <div>
             <div style={{position: 'relative', marginBottom: 10, padding: 0, display: this.state.isActive ? 'none' : ''}}>
               <h4 style={{color:'#9E9E9E', lineHeight: 1.5, textAlign:'left', fontSize: 15.5}}>
-                為了響應環保，未得獎者本公司不提供紙本發票索取喔。請大家跟我們一起愛護這個地球 >_^
+                為了響應環保，未得獎者本公司不提供紙本發票索取喔。請大家跟我們一起愛護這個地球🌲
               </h4>
             </div>
             <div style={{...this.style}}></div>
@@ -312,7 +312,7 @@ class App extends React.Component {
               <RaisedButton label="取消"
                             className={indexStyle.RaisedButton_noRadius}
                             style={{width: '50%'}}
-                            onClick={this.leavePage.bind(this)}
+                            onTouchTap={this.leavePage.bind(this)}
                             backgroundColor={'#B2DFDB'}
                             labelColor={'#FFFFFF'} />
               {/*{ this.state.selectedInvoiceType == InvoiceType.CitizenDigitalCertification ?*/}
@@ -326,7 +326,7 @@ class App extends React.Component {
                 style={{width: '50%', display: this.state.clickState ? 'none':'inline-block'}}
                 backgroundColor={'#81D4FA'}
                 labelColor={'#FFFFFF'}
-                onClick={this.submitForm}
+                onTouchTap={this.submitForm}
                 disabled= {this.state.selectedInvoiceType == InvoiceType.Email ? false : this.state.disable}/>
               {/*}*/}
             </div>
