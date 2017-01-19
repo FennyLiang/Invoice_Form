@@ -115,7 +115,7 @@ class App extends React.Component {
         return (resultVal, this.state.selectedInvoiceType);
     }
     // fetch api
-    const resp = await fetch('', {
+    const resp = await fetch('https://briareus-qat.wemoscooter.com/api/invoice', {
       method: 'POST',
       headers: {
         Accept: 'application/json',
@@ -148,9 +148,9 @@ class App extends React.Component {
   }
 
   leavePage() {
-    if(this.state.isChangingInvoiceType){
-      window.location.href = 'https://briareus-qat.wemoscooter.com?action=closed'
-    }
+
+      window.location.href = 'https://briareus-qat.wemoscooter.com?action=cancel'
+
   }
 
   // Get user Default Setting
@@ -176,7 +176,7 @@ class App extends React.Component {
   async getInitType (decoUrl) {
     var resultToken = this.getParameterByName('token', decoUrl);
     console.log(resultToken);
-    const resp = await fetch('', {
+    const resp = await fetch('https://briareus-qat.wemoscooter.com/api/invoice', {
       method: 'GET',
       headers: {
         Accept: 'application/json',
