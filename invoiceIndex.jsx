@@ -5,7 +5,7 @@ import {Card, CardTitle, CardText} from 'material-ui/Card';
 import injectTapEventPlugin from 'react-tap-event-plugin';
 import RaisedButton from 'material-ui/RaisedButton';
 import TextField from 'material-ui/TextField';
-import indexStyle from './index.css';
+import indexStyle from './invoiceIndex.css';
 import 'whatwg-fetch';
 import Spinner from 'react-spinkit';
 
@@ -135,13 +135,13 @@ class App extends React.Component {
 
     if(result === "success"){
       window.location.href = 'https://briareus-qat.wemoscooter.com?action=closed'
-    }else{
+    }else {
       if(this.state.selectedInvoiceType == InvoiceType.PhoneNumber){
-        this.setState({ phoneErrorText: '條碼錯誤，請輸入正確手機條碼。', disable: true })
-      }else if(this.state.selectedInvoiceType == InvoiceType.Donate){
-        this.setState({ donateErrorText: '愛心碼錯誤，請輸入正確愛心碼。', disable: true })
-      } else {
-        this.setState({ citizenErrorText: '憑證錯誤，請輸入正確自然人憑證。', disable: true })
+        this.setState({ phoneErrorText: '條碼錯誤，請輸入正確手機條碼。', disable: !this.state.disable })
+      }else if (this.state.selectedInvoiceType == InvoiceType.Donate){
+        this.setState({ donateErrorText: '愛心碼錯誤，請輸入正確愛心碼。', disable: !this.state.disable })
+      }else if (this.state.selectedInvoiceType == InvoiceType.CitizenDigitalCertification){
+        this.setState({ citizenErrorText: '憑證錯誤，請輸入正確自然人憑證。', disable: !this.state.disable })
       }
     }
 
@@ -327,7 +327,7 @@ class App extends React.Component {
                 backgroundColor={'#81D4FA'}
                 labelColor={'#FFFFFF'}
                 onClick={this.submitForm}
-                disabled={this.state.disable}/>
+                disabled= {this.state.selectedInvoiceType == InvoiceType.Email ? false : this.state.disable}/>
               {/*}*/}
             </div>
           </div>

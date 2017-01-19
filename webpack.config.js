@@ -4,9 +4,9 @@ var ExtractTextPlugin = require('extract-text-webpack-plugin');
 var combineLoaders = require('webpack-combine-loaders');
 
 module.exports = {
-  entry: ['babel-polyfill','./index.jsx'],
+  entry: ['babel-polyfill','./invoiceIndex.jsx'],
   output: {
-    filename: './bundle.js',
+    filename: './invoiceBundle.js',
 
   },
 
@@ -47,7 +47,7 @@ module.exports = {
 
   plugins: [
     new webpack.HotModuleReplacementPlugin(),
-    new ExtractTextPlugin('styles.css'),
+    new ExtractTextPlugin('invoiceStyles.css'),
     new webpack.ProvidePlugin({
       React: 'react',
       ReactDOM:'react-dom'
