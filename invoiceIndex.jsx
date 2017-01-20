@@ -33,6 +33,7 @@ class App extends React.Component {
       phoneErrorText: '',
       donateErrorText: '',
       citizenErrorText: '',
+      userToken: '',
       disable: false,
     };
     this.submitForm=this.submitForm.bind(this);
@@ -73,7 +74,7 @@ class App extends React.Component {
         if (nextState[fieldName].match(donateRegex)){
           this.setState({ donateErrorText: '', disable: false })
         }else {
-          this.setState({ donateErrorText: '格式不符，請輸入3~7位數字愛心碼。', disable: true })
+          this.setState({ donateErrorText: '格式不符，請輸入3~7位數字愛心碼。'})
         }
         break;
       case InvoiceType.CitizenDigitalCertification:
@@ -92,28 +93,34 @@ class App extends React.Component {
 
 
 
-  async submitForm() {
+  async submitForm(decoUrl) {
     //find value
-    var resultVal = '';
+
+    let phoneResultVal = '';
+    let donateResultVal = '';
+    let citizenResultVal = '';
+
     switch (this.state.selectedInvoiceType){
       case InvoiceType.Email:
         break;
       case InvoiceType.PhoneNumber:
-        resultVal = this.state.phoneNumber;
+        phoneResultVal = this.state.phoneNumber;
         console.log(this.state.phoneNumber);
         break;
       case InvoiceType.Donate:
-        resultVal = this.state.donateCode;
+        donateResultVal = this.state.donateCode;
         console.log(this.state.donateCode);
         break;
       case InvoiceType.CitizenDigitalCertification:
-        resultVal = this.state.citizenCode;
+        citizenResultVal = this.state.citizenCode;
         console.log(this.state.citizenCode);
         break;
       default:
         break;
-        return (resultVal, this.state.selectedInvoiceType);
+        return ( phoneResultVal,donateResultVal,citizenResultVal, this.state.selectedInvoiceType);
     }
+    console.log(donateResultVal, this.state.selectedInvoiceType)
+
     // fetch api
     const resp = await fetch('https://briareus-qat.wemoscooter.com/api/invoice', {
       method: 'POST',
@@ -122,10 +129,12 @@ class App extends React.Component {
         'Content-Type': 'application/json'
       },
       mode: 'cors',
-
       body: JSON.stringify({
-        type: this.state.selectedInvoiceType,
-        phoneNum: parseInt(resultVal)
+          token: this.state.userToken,
+          type: this.state.selectedInvoiceType,
+          phoneNum: phoneResultVal,
+          donateCode: donateResultVal,
+          citizenCode: citizenResultVal
       }),
     });
     // .then(res => res.json())
@@ -134,7 +143,7 @@ class App extends React.Component {
     console.log(result);
 
     if(result === "success"){
-      window.location.href = 'https://briareus-qat.wemoscooter.com?action=closed'
+      WEBVIEW.closePage();
     }else {
       if(this.state.selectedInvoiceType == InvoiceType.PhoneNumber){
         this.setState({ phoneErrorText: '條碼錯誤，請輸入正確手機條碼。', disable: !this.state.disable })
@@ -148,9 +157,7 @@ class App extends React.Component {
   }
 
   leavePage() {
-
-      window.location.href = 'https://briareus-qat.wemoscooter.com?action=cancel'
-
+    WEBVIEW.closePage();
   }
 
   // Get user Default Setting
@@ -163,9 +170,11 @@ class App extends React.Component {
     if (!url) {
       url = window.location.href;
     }
+
     name = name.replace(/[\[\]]/g, "\\$&");
     var regex = new RegExp("[?&]" + name + "(=([^&#]*)|&|#|$)"),
       results = regex.exec(url);
+
     if (!results) return null;
     if (!results[2]) return '';
     var decoUrl = decodeURIComponent(results[2].replace(/\+/g, " "));
@@ -174,9 +183,11 @@ class App extends React.Component {
 
 
   async getInitType (decoUrl) {
+
     var resultToken = this.getParameterByName('token', decoUrl);
-    console.log(resultToken);
-    const resp = await fetch('https://briareus-qat.wemoscooter.com/api/invoice', {
+    this.setState({userToken: resultToken })
+
+    const resp = await fetch('https://briareus-qat.wemoscooter.com/api/invoice?token='+resultToken, {
       method: 'GET',
       headers: {
         Accept: 'application/json',
@@ -191,7 +202,6 @@ class App extends React.Component {
 
     this.setState({ selectedInvoiceType: type});
   }
-
 
 
   style =  {
