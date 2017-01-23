@@ -15,8 +15,8 @@
     margin-bottom: 15px;
 }
 
-html {
-    height: 100%;
+html,body {
+    height: 100% !important;
     color: #9E9E9E
 }
 

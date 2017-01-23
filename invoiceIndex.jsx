@@ -35,6 +35,7 @@ class App extends React.Component {
       citizenErrorText: '',
       userToken: '',
       disable: false,
+      scrollY: 0,
     };
     this.submitForm=this.submitForm.bind(this);
 
@@ -49,7 +50,7 @@ class App extends React.Component {
   }
 
   changeInvoiceType(type) {
-    this.setState({ selectedInvoiceType: type });
+    this.setState({ selectedInvoiceType: type, disable: false});
   }
 
   handleTextField(fieldName, event) {
@@ -65,21 +66,22 @@ class App extends React.Component {
         break;
       case InvoiceType.PhoneNumber:
         if (nextState[fieldName].match(phoneRegex)) {
-          this.setState({ phoneErrorText: '', disable: false })
+          this.setState({ phoneErrorText: '', disable: false})
         } else {
           this.setState({ phoneErrorText: '格式不符，請輸入正確手機條碼。', disable: true })
         }
         break;
       case InvoiceType.Donate:
+
         if (nextState[fieldName].match(donateRegex)){
-          this.setState({ donateErrorText: '', disable: false })
+          this.setState({ donateErrorText: ''})
         }else {
-          this.setState({ donateErrorText: '格式不符，請輸入3~7位數字愛心碼。'})
+          this.setState({ donateErrorText: '格式不符，請輸入3~7位數字愛心碼，或不填請按確認。'})
         }
         break;
       case InvoiceType.CitizenDigitalCertification:
         if (nextState[fieldName].match(citizenRegex)){
-          this.setState({ citizenErrorText: '', disable: false })
+          this.setState({ citizenErrorText: '', disable: false})
         }else {
           this.setState({ citizenErrorText: '格式不符，請輸入開頭2碼英文字+14碼數字。', disable: true })
         }
@@ -143,12 +145,12 @@ class App extends React.Component {
     console.log(result);
 
     if(result === "success"){
-      WEBVIEW.closePage();
+      this.setState({ isChangingInvoiceType : !this.state.isChangingInvoiceType});
     }else {
       if(this.state.selectedInvoiceType == InvoiceType.PhoneNumber){
         this.setState({ phoneErrorText: '條碼錯誤，請輸入正確手機條碼。', disable: !this.state.disable })
       }else if (this.state.selectedInvoiceType == InvoiceType.Donate){
-        this.setState({ donateErrorText: '愛心碼錯誤，請輸入正確愛心碼。', disable: !this.state.disable })
+        this.setState({ donateErrorText: '愛心碼錯誤，請輸入正確愛心碼。', disable: this.state.disable })
       }else if (this.state.selectedInvoiceType == InvoiceType.CitizenDigitalCertification){
         this.setState({ citizenErrorText: '憑證錯誤，請輸入正確自然人憑證。', disable: !this.state.disable })
       }
@@ -157,15 +159,28 @@ class App extends React.Component {
   }
 
   leavePage() {
-    WEBVIEW.closePage();
+   this.setState({ isChangingInvoiceType : !this.state.isChangingInvoiceType});
   }
 
-  // Get user Default Setting
+
 
   componentWillMount() {
     this.getInitType();
   }
+  // componentDidMount() {
+  //   window.addEventListener('scroll', (event) =>{
+  //     const top = window.scrollY;
+  //     this.setState({scrollY: -top});
+  //
+  //   })
+  //   // window.addEventListener('resize', (event) =>{
+  //   //   const top = this.scrollY;
+  //   //   console.log('resize!',`screen.Height: ${screen.height}`)
+  //   // })
+  //
+  // }
 
+  // Get user Default Setting
   getParameterByName =(name, url) => {
     if (!url) {
       url = window.location.href;
@@ -312,7 +327,7 @@ class App extends React.Component {
 
           { this.state.isChangingInvoiceType &&
           <div>
-            <div style={{position: 'relative', marginBottom: 10, padding: 0, display: this.state.isActive ? 'none' : ''}}>
+            <div style={{ marginBottom: 10, padding: 0, display: this.state.isActive ? 'none' : ''}}>
               <h4 style={{color:'#9E9E9E', lineHeight: 1.5, textAlign:'left', fontSize: 15.5}}>
                 為了響應環保，未得獎者本公司不提供紙本發票索取喔。請大家跟我們一起愛護這個地球🌲
               </h4>
