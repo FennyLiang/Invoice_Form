@@ -160,6 +160,7 @@ class App extends React.Component {
 
   leavePage() {
    this.setState({ isChangingInvoiceType : !this.state.isChangingInvoiceType});
+   this.getInitType();
   }
 
 
