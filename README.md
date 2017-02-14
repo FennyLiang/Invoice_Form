@@ -6,6 +6,6 @@
 > npm start
 
 ##### See result at
->localhost:8000
+> localhost:8888/invoiceIndex.html?token=****
 
 
