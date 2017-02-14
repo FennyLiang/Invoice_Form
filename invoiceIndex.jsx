@@ -36,6 +36,7 @@ class App extends React.Component {
       userToken: '',
       disable: false,
       scrollY: 0,
+      inputValue: '',
     };
     this.submitForm=this.submitForm.bind(this);
 
@@ -55,42 +56,15 @@ class App extends React.Component {
 
   handleTextField(fieldName, event) {
     let nextState ={};
-    var phoneRegex = /^\/.{7}$/ //手機條碼
-    var donateRegex = /^[0-9]{3,7}$/ //捐贈
-    var citizenRegex = /^[A-Z]{2}\d{14}$/;
-
+    // var phoneRegex = /^\/.{7}$/ //手機條碼
+    // var donateRegex = /^[0-9]{3,7}$/ //捐贈
+    // var citizenRegex = /^[A-Z]{2}\d{14}$/;
+    //
     nextState[fieldName] = event.target.value;
-
-    switch (this.state.selectedInvoiceType){
-      case InvoiceType.Email:
-        break;
-      case InvoiceType.PhoneNumber:
-        if (nextState[fieldName].match(phoneRegex)) {
-          this.setState({ phoneErrorText: '', disable: false})
-        } else {
-          this.setState({ phoneErrorText: '格式不符，請輸入正確手機條碼。', disable: true })
-        }
-        break;
-      case InvoiceType.Donate:
-
-        if (nextState[fieldName].match(donateRegex)){
-          this.setState({ donateErrorText: ''})
-        }else {
-          this.setState({ donateErrorText: '格式不符，請輸入3~7位數字愛心碼，或不填請按確認。'})
-        }
-        break;
-      case InvoiceType.CitizenDigitalCertification:
-        if (nextState[fieldName].match(citizenRegex)){
-          this.setState({ citizenErrorText: '', disable: false})
-        }else {
-          this.setState({ citizenErrorText: '格式不符，請輸入開頭2碼英文字+14碼數字。', disable: true })
-        }
-        break;
-      default:
-        break;
-    }
-
+    console.log(nextState[fieldName])
     this.setState(nextState);
+    this.setState({inputValue: nextState[fieldName]})
+    console.log(nextState)
   }
 
 
@@ -141,25 +115,25 @@ class App extends React.Component {
     });
     // .then(res => res.json())
     // .then(console.log);
-    const {result} = await resp.json();
-    console.log(result);
+    const {result, error} = await resp.json();
+    console.log(result, error);
 
     if(result === "success"){
-      this.setState({ isChangingInvoiceType : !this.state.isChangingInvoiceType});
+      this.setState({ isChangingInvoiceType : !this.state.isChangingInvoiceType, inputValue: '', phoneErrorText: '', donateErrorText: '', citizenErrorText: '' });
     }else {
       if(this.state.selectedInvoiceType == InvoiceType.PhoneNumber){
-        this.setState({ phoneErrorText: '條碼錯誤，請輸入正確手機條碼。', disable: !this.state.disable })
+        this.setState({ phoneErrorText: error })
       }else if (this.state.selectedInvoiceType == InvoiceType.Donate){
-        this.setState({ donateErrorText: '愛心碼錯誤，請輸入正確愛心碼。', disable: this.state.disable })
+        this.setState({ donateErrorText: error })
       }else if (this.state.selectedInvoiceType == InvoiceType.CitizenDigitalCertification){
-        this.setState({ citizenErrorText: '憑證錯誤，請輸入正確自然人憑證。', disable: !this.state.disable })
+        this.setState({ citizenErrorText: error })
       }
     }
 
   }
 
   leavePage() {
-   this.setState({ isChangingInvoiceType : !this.state.isChangingInvoiceType});
+   this.setState({ isChangingInvoiceType : !this.state.isChangingInvoiceType, inputValue: '', phoneErrorText: '', donateErrorText: '', citizenErrorText: ''});
    this.getInitType();
   }
 
@@ -279,6 +253,7 @@ class App extends React.Component {
                        errorStyle={{color: '#FF8A65'}}
                        onChange={this.handleTextField.bind(this, 'phoneNumber')}
                        fullWidth={true}
+                       value={this.state.inputValue}
             />
           </Card>
 
@@ -295,15 +270,17 @@ class App extends React.Component {
             <TextField className={indexStyle.strechHeightAnimation}
                        style={ this.state.isChangingInvoiceType && this.state.selectedInvoiceType == InvoiceType.Donate ? { opacity: 1 } : { height: 0, opacity: 0 }}
                        hidden={!this.state.isChangingInvoiceType}
-                       hintText="請輸入您的愛心碼(預設為陽光基金會)"
+                       hintText="請輸入您的愛心碼(預設為陽光基金會 13579)"
                        errorText={this.state.donateErrorText}
                        errorStyle={{color: '#FF8A65'}}
                        onChange={this.handleTextField.bind(this, 'donateCode')}
-                       fullWidth={true} />
+                       fullWidth={true}
+                       value={this.state.inputValue}
+            />
           </Card>
 
           {/*其他*/}
-          <Card className={` ${indexStyle.card} ${this.state.isChangingInvoiceType && (this.state.selectedInvoiceType == InvoiceType.CitizenDigitalCertification) ? indexStyle.selected_grey: ''}`}
+          <Card className={` ${indexStyle.card} ${this.state.isChangingInvoiceType && (this.state.selectedInvoiceType == InvoiceType.CitizenDigitalCertification) ? indexStyle.selectedCard: ''}`}
                 expanded={this.state.selectedInvoiceType == InvoiceType.CitizenDigitalCertification}
                 onTouchTap={ this.changeInvoiceType.bind(this, InvoiceType.CitizenDigitalCertification)}
                 hidden={!(this.state.selectedInvoiceType == InvoiceType.CitizenDigitalCertification) && !this.state.isChangingInvoiceType}
@@ -319,7 +296,8 @@ class App extends React.Component {
                        errorText={this.state.citizenErrorText}
                        errorStyle={{color: '#FF8A65'}}
                        onChange={this.handleTextField.bind(this, 'citizenCode')}
-                       fullWidth={true} />
+                       fullWidth={true}
+                       value={this.state.inputValue} />
           </Card>
           {/*當isChangingInvoiceType等於true的時候出現button，此為設button的相反狀態，而不是真的更改狀態*/}
           { !this.state.isChangingInvoiceType &&
