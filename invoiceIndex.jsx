@@ -55,7 +55,7 @@ class App extends React.Component {
 
   handleTextField(fieldName, event) {
     let nextState ={};
-    var phoneRegex = /^\/[A-Z0-9]{7}/ //手機條碼
+    var phoneRegex = /^\/.{7}$/ //手機條碼
     var donateRegex = /^[0-9]{3,7}$/ //捐贈
     var citizenRegex = /^[A-Z]{2}\d{14}$/;
 
